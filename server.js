@@ -1,6 +1,5 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const path = require("path");
 const cors = require("cors");
 const { Product, Order, OrderItem } = require("./model");
 var AWS = require("aws-sdk");
@@ -126,6 +125,16 @@ app.post("/reset", async (req, res) => {
       where: { id: productId },
     }
   );
+});
+
+app.get("/test", (req, res) => {
+  var ifs = require("os").networkInterfaces();
+  var result = Object.keys(ifs)
+    .map((x) => [x, ifs[x].filter((x) => x.family === "IPv4")[0]])
+    .filter((x) => x[1])
+    .map((x) => x[1].address);
+
+  res.send({ ipInfo: result });
 });
 
 app.listen(3000, () => {

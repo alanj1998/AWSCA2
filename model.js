@@ -1,7 +1,7 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
 
 const sequelize = new Sequelize(
-  "mysql://admin:testrds123@database-1.cavprg5eroxx.eu-west-1.rds.amazonaws.com:3306/testrds123",
+  "mysql://admin:Asdf1234$1@database-2.cavprg5eroxx.eu-west-1.rds.amazonaws.com:3306/testDb",
   {
     pool: {
       max: 5,
