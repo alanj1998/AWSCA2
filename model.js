@@ -1,11 +1,8 @@
-const {
-  Sequelize,
-  Model,
-  DataTypes
-} = require("sequelize");
+const { Sequelize, Model, DataTypes } = require("sequelize");
 
 const sequelize = new Sequelize(
-  "mysql://31adVEshxH:ykXbGs3khN@remotemysql.com:3306/31adVEshxH", {
+  "mysql://admin:testrds123@database-1.cavprg5eroxx.eu-west-1.rds.amazonaws.com:3306/testrds123",
+  {
     pool: {
       max: 5,
       min: 0,
@@ -16,53 +13,62 @@ const sequelize = new Sequelize(
 );
 
 class Product extends Model {}
-Product.init({
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
+Product.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    name: DataTypes.STRING,
+    status: DataTypes.STRING,
+    provider: DataTypes.STRING,
+    pricePerUnit: DataTypes.FLOAT,
+    code: DataTypes.STRING,
+    unitsAvailable: DataTypes.INTEGER,
   },
-  name: DataTypes.STRING,
-  status: DataTypes.STRING,
-  provider: DataTypes.STRING,
-  pricePerUnit: DataTypes.FLOAT,
-  code: DataTypes.STRING,
-  unitsAvailable: DataTypes.INTEGER,
-}, {
-  sequelize,
-  modelName: "product"
-});
+  {
+    sequelize,
+    modelName: "product",
+  }
+);
 module.exports.Product = Product;
 
 class Order extends Model {}
-Order.init({
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
+Order.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    name: DataTypes.STRING,
+    address: DataTypes.STRING,
+    totalValue: DataTypes.FLOAT,
   },
-  name: DataTypes.STRING,
-  address: DataTypes.STRING,
-  totalValue: DataTypes.FLOAT
-}, {
-  sequelize,
-  modelName: "order"
-});
+  {
+    sequelize,
+    modelName: "order",
+  }
+);
 module.exports.Order = Order;
 
 class OrderItem extends Model {}
-OrderItem.init({
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
+OrderItem.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    orderId: DataTypes.INTEGER,
+    name: DataTypes.STRING,
+    quantity: DataTypes.INTEGER,
+    productId: DataTypes.INTEGER,
   },
-  orderId: DataTypes.INTEGER,
-  name: DataTypes.STRING,
-  quantity: DataTypes.INTEGER,
-  productId: DataTypes.INTEGER
-}, {
-  sequelize,
-  modelName: "order-item"
-});
+  {
+    sequelize,
+    modelName: "order-item",
+  }
+);
 module.exports.OrderItem = OrderItem;

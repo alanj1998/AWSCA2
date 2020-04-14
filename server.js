@@ -3,6 +3,9 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
 const { Product, Order, OrderItem } = require("./model");
+var AWS = require("aws-sdk");
+// Create an SQS service object
+var sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
 
 const app = express();
 app.use(bodyParser.json());
@@ -79,7 +82,10 @@ app.post("/order", async (req, res) => {
     await Product.update(
       {
         status,
-        unitsAvailable: unitsAvailable - order.quantity,
+        unitsAvailable:
+          unitsAvailable - order.quantity > 0
+            ? unitsAvailable - order.quantity
+            : 0,
       },
       {
         where: {
@@ -87,6 +93,22 @@ app.post("/order", async (req, res) => {
         },
       }
     );
+
+    if (unitsAvailable - order.quantity <= 0) {
+      var params = {
+        DelaySeconds: 5,
+        MessageAttributes: {
+          ProductId: order.productId,
+        },
+        MessageBody: order.name + " ran out. Reorder!",
+        // MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
+        // MessageId: "Group1",  // Required for FIFO queues
+        QueueUrl:
+          "https://sqs.eu-west-1.amazonaws.com/772525446586/products-ran-out",
+      };
+
+      await sqs.sendMessage(params).promise();
+    }
   }
 
   res.send({
@@ -96,7 +118,7 @@ app.post("/order", async (req, res) => {
 });
 
 app.post("/reset", async (req, res) => {
-  const productId = req.body;
+  const { productId } = req.body;
   await Product.sync();
   await Product.update(
     { unitsAvailable: 5 },

@@ -1,5 +1,4 @@
 $(document).ready(() => {
-  alert("called af");
   fetch("http://api.medicarehardware.tk/products")
     .then((res) => {
       return res.json();
