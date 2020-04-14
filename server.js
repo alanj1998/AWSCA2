@@ -127,6 +127,32 @@ app.post("/order", async (req, res) => {
     });
 });
 
+app.get('/matest', async (req, res) => {
+    try {
+        var params = {
+            DelaySeconds: 5,
+            MessageAttributes: {
+                ProductId: {
+                    DataType: "Number",
+                    StringValue: "1"
+                },
+            },
+            MessageBody: 'test' + " ran out. Reorder!",
+            // MessageDeduplicationId: "TheWhistler",  // Required for FIFO queues
+            // MessageId: "Group1",  // Required for FIFO queues
+            QueueUrl: "https://sqs.eu-west-1.amazonaws.com/772525446586/products-ran-out",
+        };
+
+        await sqs.sendMessage(params).promise();
+        res.send({
+            message: 'all g'
+        })
+    } catch (err) {
+        console.log(err)
+        res.send(err)
+    }
+})
+
 app.post("/reset", async (req, res) => {
     const {
         productId
@@ -139,6 +165,8 @@ app.post("/reset", async (req, res) => {
             id: productId
         },
     });
+
+    res.send()
 });
 
 app.get("/test", (req, res) => {
