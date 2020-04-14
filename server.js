@@ -157,9 +157,11 @@ app.post("/reset", async (req, res) => {
     const {
         productId
     } = req.body;
+    console.log(productId)
     await Product.sync();
     await Product.update({
-        unitsAvailable: 5
+        unitsAvailable: 5,
+        status: "Available"
     }, {
         where: {
             id: productId
