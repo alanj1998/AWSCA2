@@ -163,6 +163,7 @@ $(document).ready(() => {
       totalValue: total,
       orderItems,
     };
+    console.log(request);
 
     fetch("http://api.medicarehardware.tk/order", {
       method: "POST",
